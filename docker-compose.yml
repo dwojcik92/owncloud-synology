@@ -61,6 +61,14 @@ services:
     volumes:
       - redis:/var/lib/redis
 
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 53000:3000
+    volumes:
+      - grafana-data:/var/lib/grafana
+
+
 
 volumes:
   files:
@@ -87,3 +95,10 @@ volumes:
       type:      none
       device:    /volume2/owncloud/redis
       o:         bind
+  grafana-data:
+    driver:      local
+    driver_opts:
+      type:      none
+      device:    /volume2/owncloud/grafana-data
+      o:         bind
+    
