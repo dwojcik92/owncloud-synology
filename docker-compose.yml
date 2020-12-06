@@ -68,7 +68,16 @@ services:
     volumes:
       - grafana-data:/var/lib/grafana
 
-
+  influxdb:
+    image: influxdb:latest
+    ports:
+      - '58086:8086'
+    volumes:
+      - influxdb-data:/var/lib/influxdb
+    environment:
+      - INFLUXDB_DB=ds918
+      - INFLUXDB_ADMIN_USER=synology
+      - INFLUXDB_ADMIN_PASSWORD=synology
 
 volumes:
   files:
@@ -101,4 +110,9 @@ volumes:
       type:      none
       device:    /volume2/owncloud/grafana-data
       o:         bind
-    
+  influxdb-data:
+    driver:      local
+    driver_opts:
+      type:      none
+      device:    /volume2/owncloud/influxdb-data
+      o:         bind
