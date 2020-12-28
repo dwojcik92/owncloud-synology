@@ -7,10 +7,10 @@ services:
       - mariadb
     volumes:
       - nextcloud-data:/var/www/html
-      # - nextcloud-app/config:/var/www/html/config
-      # - nextcloud-app/custom_apps:/var/www/html/custom_apps
-      # - nextcloud-app/data:/var/www/html/data
-      # - nextcloud-app/themes:/var/www/html/themes
+      - nextcloud-app-config:/var/www/html/config
+      - nextcloud-app-custom_apps:/var/www/html/custom_apps
+      - nextcloud-app-data:/var/www/html/data
+      - nextcloud-app-themes:/var/www/html/themes
       - /etc/localtime:/etc/localtime:ro
     ports:
       - '19000:80'
@@ -77,11 +77,39 @@ services:
 
 volumes:
 
-  nextcloud-data:
+  nextcloud-app:
     driver:      local
     driver_opts:
       type:      none
-      device:    /volume2/homecloud/nextcloud
+      device:    /volume2/homecloud/nextcloud/app
+      o:         bind
+
+  nextcloud-app-data:
+    driver:      local
+    driver_opts:
+      type:      none
+      device:    /volume2/homecloud/nextcloud/app-data
+      o:         bind
+
+  nextcloud-app-config:
+    driver:      local
+    driver_opts:
+      type:      none
+      device:    /volume2/homecloud/nextcloud/app-config
+      o:         bind
+
+  nextcloud-app-custom_apps:
+    driver:      local
+    driver_opts:
+      type:      none
+      device:    /volume2/homecloud/nextcloud/app-custom_apps
+      o:         bind
+
+  nextcloud-app-themes:
+    driver:      local
+    driver_opts:
+      type:      none
+      device:    /volume2/homecloud/nextcloud/app-themes
       o:         bind
 
   homecloud-mariadb-mysql:
