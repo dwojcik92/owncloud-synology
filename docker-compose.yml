@@ -11,9 +11,13 @@ services:
       # - nextcloud-app-custom_apps:/var/www/html/custom_apps
       # - nextcloud-app-data:/var/www/html/data
       # - nextcloud-app-themes:/var/www/html/themes
-      - /etc/localtime:/etc/localtime:ro
-    # environment:
-    #  - NEXTCLOUD_DATA_DIR=/var/www/html/data
+      # - /etc/localtime:/etc/localtime:ro
+    environment:
+      # - NEXTCLOUD_DATA_DIR=/var/www/html/data
+      - MYSQL_PASSWORD=nextcloud
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_HOST=mariadb 
     ports:
       - '19000:80'
       
