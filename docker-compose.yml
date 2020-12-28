@@ -6,7 +6,7 @@ services:
     depends_on:
       - mariadb
     volumes:
-      - nextcloud-data:/var/www/html
+      - nextcloud-app:/var/www/html
       - nextcloud-app-config:/var/www/html/config
       - nextcloud-app-custom_apps:/var/www/html/custom_apps
       - nextcloud-app-data:/var/www/html/data
