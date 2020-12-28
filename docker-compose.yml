@@ -83,7 +83,7 @@ volumes:
     driver:      local
     driver_opts:
       type:      none
-      device:    /volume2/homecloud/nextcloud/app
+      device:    /volume2/homecloud/nextcloud
       o:         bind
 
   # nextcloud-app-data:
