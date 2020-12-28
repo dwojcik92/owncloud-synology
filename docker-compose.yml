@@ -1,52 +1,37 @@
 version: '3.2'
 
 services:
-  oc-server:
-    image: owncloud/server:latest
-    restart: always
-    ports:
-      - "58080:8080"
+  nextcloud-server:
+    image: nextcloud:latest
     depends_on:
-      - db
-      - redis
-    links:
-      - "db:db"
-      - "redis:redis"
-    environment:
-      - OWNCLOUD_DOMAIN=localhost
-      - OWNCLOUD_DB_TYPE=mysql
-      - OWNCLOUD_DB_NAME=owncloud
-      - OWNCLOUD_DB_USERNAME=owncloud
-      - OWNCLOUD_DB_PASSWORD=owncloud
-      - OWNCLOUD_DB_HOST=db
-      - OWNCLOUD_ADMIN_USERNAME=admin
-      - OWNCLOUD_ADMIN_PASSWORD=admin
-      - OWNCLOUD_REDIS_ENABLED=true
-      - OWNCLOUD_REDIS_HOST=redis
-    healthcheck:
-      test: ["CMD", "/usr/bin/healthcheck"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+      - mariadb
     volumes:
-      - files:/mnt/data
-
-  db:
+      - nextcloud-data:/var/www/html
+      - nextcloud-app/config:/var/www/html/config
+      - nextcloud-app/custom_apps:/var/www/html/custom_apps
+      - nextcloud-app/data:/var/www/html/data
+      - nextcloud-app/themes:/var/www/html/themes
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - '19000:80'
+      
+  mariadb:
     image: webhippie/mariadb:latest
-    restart: always
     environment:
-      - MARIADB_ROOT_PASSWORD=owncloud
-      - MARIADB_USERNAME=owncloud
-      - MARIADB_PASSWORD=owncloud
-      - MARIADB_DATABASE=owncloud
+      - MARIADB_ROOT_PASSWORD=nextcloud
+      - MARIADB_USERNAME=nextcloud
+      - MARIADB_PASSWORD=nextcloud
+      - MARIADB_DATABASE=nextcloud
     healthcheck:
       test: ["CMD", "/usr/bin/healthcheck"]
       interval: 30s
       timeout: 10s
       retries: 5
     volumes:
-      - mysql:/var/lib/mysql
-      - backup:/var/lib/backup
+      - homecloud-mariadb/mysql:/var/lib/mysql
+      - homecloud-mariadb/backup:/var/lib/backup
+    ports:
+      - '11000:3306'
 
   redis:
     image: webhippie/redis:latest
@@ -61,58 +46,66 @@ services:
     volumes:
       - redis:/var/lib/redis
 
+  collabora:
+    image: collabora/code
+    ports: 
+     - 19980:9980
+    cap_add:
+      - MKNOD
+    environment:
+      - extra_params=--o:ssl.enable=false
+      - username=admin 
+      - password=admin
+
   grafana:
     image: grafana/grafana
     ports:
-      - 53000:3000
+      - 13000:3000
     volumes:
-      - grafana-data:/var/lib/grafana
+      - homecloud-grafana:/var/lib/grafana
 
   influxdb:
     image: influxdb:latest
     ports:
-      - '58086:8086'
+      - '18086:8086'
     volumes:
-      - influxdb-data:/var/lib/influxdb
+      - homecloud-influxdb:/var/lib/influxdb
     environment:
       - INFLUXDB_DB=ds918
       - INFLUXDB_ADMIN_USER=synology
       - INFLUXDB_ADMIN_PASSWORD=synology
 
 volumes:
-  files:
+
+  nextcloud-data:
     driver:      local
     driver_opts:
       type:      none
-      device:    /volume2/owncloud/files
+      device:    /volume2/homecloud/nextcloud/data
       o:         bind
-  mysql:
+  nextcloud-app:
     driver:      local
     driver_opts:
       type:      none
-      device:    /volume2/owncloud/mysql
+      device:    /volume2/homecloud/nextcloud/app
       o:         bind
-  backup:
+
+  homecloud-mariadb:
     driver:      local
     driver_opts:
       type:      none
-      device:    /volume2/owncloud/backup
+      device:    /volume2/homecloud/mariadb
       o:         bind
-  redis:
+
+  homecloud-grafana:
     driver:      local
     driver_opts:
       type:      none
-      device:    /volume2/owncloud/redis
+      device:    /volume2/homecloud/grafana
       o:         bind
-  grafana-data:
+  homecloud-influxdb:
     driver:      local
     driver_opts:
       type:      none
-      device:    /volume2/owncloud/grafana-data
-      o:         bind
-  influxdb-data:
-    driver:      local
-    driver_opts:
-      type:      none
-      device:    /volume2/owncloud/influxdb-data
+      device:    /volume2/homecloud/influxdb
       o:         bind
