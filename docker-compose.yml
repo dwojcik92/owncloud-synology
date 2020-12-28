@@ -7,10 +7,10 @@ services:
       - mariadb
     volumes:
       - nextcloud-data:/var/www/html
-      - nextcloud-app/config:/var/www/html/config
-      - nextcloud-app/custom_apps:/var/www/html/custom_apps
-      - nextcloud-app/data:/var/www/html/data
-      - nextcloud-app/themes:/var/www/html/themes
+      # - nextcloud-app/config:/var/www/html/config
+      # - nextcloud-app/custom_apps:/var/www/html/custom_apps
+      # - nextcloud-app/data:/var/www/html/data
+      # - nextcloud-app/themes:/var/www/html/themes
       - /etc/localtime:/etc/localtime:ro
     ports:
       - '19000:80'
@@ -28,8 +28,8 @@ services:
       timeout: 10s
       retries: 5
     volumes:
-      - homecloud-mariadb/mysql:/var/lib/mysql
-      - homecloud-mariadb/backup:/var/lib/backup
+      - homecloud-mariadb-mysql:/var/lib/mysql
+      - homecloud-mariadb-backup:/var/lib/backup
     ports:
       - '11000:3306'
 
@@ -44,7 +44,7 @@ services:
       timeout: 10s
       retries: 5
     volumes:
-      - redis:/var/lib/redis
+      - homecloud-redis:/var/lib/redis
 
   collabora:
     image: collabora/code
@@ -81,20 +81,21 @@ volumes:
     driver:      local
     driver_opts:
       type:      none
-      device:    /volume2/homecloud/nextcloud/data
-      o:         bind
-  nextcloud-app:
-    driver:      local
-    driver_opts:
-      type:      none
-      device:    /volume2/homecloud/nextcloud/app
+      device:    /volume2/homecloud/nextcloud
       o:         bind
 
-  homecloud-mariadb:
+  homecloud-mariadb-mysql:
     driver:      local
     driver_opts:
       type:      none
-      device:    /volume2/homecloud/mariadb
+      device:    /volume2/homecloud/mariadb/mysql
+      o:         bind
+
+  homecloud-mariadb-backup:
+    driver:      local
+    driver_opts:
+      type:      none
+      device:    /volume2/homecloud/mariadb/backup
       o:         bind
 
   homecloud-grafana:
@@ -108,4 +109,11 @@ volumes:
     driver_opts:
       type:      none
       device:    /volume2/homecloud/influxdb
+      o:         bind
+
+  homecloud-redis:
+    driver:      local
+    driver_opts:
+      type:      none
+      device:    /volume2/homecloud/redis
       o:         bind
