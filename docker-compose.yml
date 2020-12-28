@@ -2,7 +2,7 @@ version: '3.2'
 
 services:
   nextcloud-server:
-    image: nextcloud:stable-apache
+    image: nextcloud:stable
     depends_on:
       - mariadb
     volumes:
