@@ -1,0 +1,66 @@
+version: '3.2'
+
+services:
+  syncthing:
+    image: syncthing/syncthing
+    restart: always
+    ports:
+      - "8384:8384"
+      - "22000:22000"
+      - "21027:21027/udp"
+    volumes:
+      - "syncthing-config:/var/syncthing/.config/syncthing"
+      - "syncthing-data:/var/syncthing"
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 13000:3000
+    volumes:
+      - homecloud-grafana:/var/lib/grafana
+
+  influxdb:
+    image: influxdb:latest
+    ports:
+      - '18086:8086'
+    volumes:
+      - homecloud-influxdb:/var/lib/influxdb
+    environment:
+      - INFLUXDB_DB=ds918
+      - INFLUXDB_ADMIN_USER=synology
+      - INFLUXDB_ADMIN_PASSWORD=synology
+
+volumes:
+  syncthing-config:
+    driver:      local
+    driver_opts:
+      type:      none
+      device:    /volume2/homecloud/syncthing/config
+      o:         bind
+
+  syncthing-data:
+    driver:      local
+    driver_opts:
+      type:      none
+      device:    /volume2/homecloud/syncthing/data
+      o:         bind
+
+  homecloud-grafana:
+    driver:      local
+    driver_opts:
+      type:      none
+      device:    /volume2/homecloud/grafana
+      o:         bind
+  homecloud-influxdb:
+    driver:      local
+    driver_opts:
+      type:      none
+      device:    /volume2/homecloud/influxdb
+      o:         bind
+
+  homecloud-redis:
+    driver:      local
+    driver_opts:
+      type:      none
+      device:    /volume2/homecloud/redis
+      o:         bind
