@@ -37,8 +37,6 @@ services:
       - grocy-db:/var/www/data
     env_file:
       - grocy.env
-    container_name: grocy
-
 
   grafana:
     image: grafana/grafana
