@@ -13,7 +13,7 @@ services:
       - "syncthing-data:/var/syncthing"
 
   grocy-nginx:
-    image: "grocy/nginx:latest"
+    image: "grocy/nginx:v3.0.0-1"
     depends_on:
       - grocy
     ports:
@@ -26,7 +26,7 @@ services:
       - /var/log/nginx
 
   grocy:
-    image: "grocy/grocy:latest"
+    image: "grocy/grocy:v3.0.0-1"
     expose:
       - '9000'
     read_only: true
