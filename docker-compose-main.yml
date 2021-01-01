@@ -27,12 +27,6 @@ services:
 
   grocy:
     image: "grocy/grocy:latest"
-    build:
-      args:
-        GITHUB_API_TOKEN: "${GITHUB_API_TOKEN}"
-        GROCY_VERSION: v3.0.0
-      context: .
-      dockerfile: Dockerfile-grocy
     expose:
       - '9000'
     read_only: true
