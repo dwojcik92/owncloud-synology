@@ -48,7 +48,7 @@ Add the following lines at the end of this file.
 
 ```
 <Directory /var/www/html>
-AllowOverride All
+    AllowOverride All
 </Directory>
 ```
 
