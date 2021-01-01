@@ -34,7 +34,7 @@ services:
       - /tmp
     volumes:
       - /var/log/php7
-      - app-db:/var/www/data
+      - grocy-db:/var/www/data
     env_file:
       - grocy.env
     container_name: grocy
