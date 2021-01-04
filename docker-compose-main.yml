@@ -101,13 +101,6 @@ volumes:
       device:    /volume2/homecloud/influxdb
       o:         bind
 
-  homecloud-redis:
-    driver:      local
-    driver_opts:
-      type:      none
-      device:    /volume2/homecloud/redis
-      o:         bind
-
   homecloud-jupyter:
     driver:      local
     driver_opts:
