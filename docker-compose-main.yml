@@ -12,6 +12,16 @@ services:
       - "syncthing-config:/var/syncthing/.config/syncthing"
       - "syncthing-data:/var/syncthing"
 
+  jupyterlab-tensorflow:
+    image: jupyter/tensorflow-notebook
+    volumes:
+     - homecloud-jupyter:/notebooks
+    ports:
+      - "18888:8888"
+    environment:
+      - JUPYTER_ENABLE_LAB=1
+    command: start-notebook.sh --NotebookApp.notebook_dir=/notebooks
+
   grocy-nginx:
     image: "grocy/nginx:v3.0.0-1"
     depends_on:
@@ -97,3 +107,12 @@ volumes:
       type:      none
       device:    /volume2/homecloud/redis
       o:         bind
+
+  homecloud-jupyter:
+    driver:      local
+    driver_opts:
+      type:      none
+      device:    /volume2/homecloud/jupyter-notebooks
+      o:         bind
+
+      
