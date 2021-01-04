@@ -15,7 +15,7 @@ services:
   jupyterlab-tensorflow:
     image: jupyter/tensorflow-notebook
     volumes:
-     - homecloud-jupyter:/notebooks
+     - "homecloud-jupyter:/notebooks"
     ports:
       - "18888:8888"
     environment:
