@@ -155,5 +155,5 @@ volumes:
     driver:      local
     driver_opts:
       type:      none
-      device:    /volume2/homecloud/openhab/userdata
+      device:    /volume2/homecloud/homeassistant/config
       o:         bind
