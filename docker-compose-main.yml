@@ -22,6 +22,13 @@ services:
       - JUPYTER_ENABLE_LAB=1
     command: start-notebook.sh --NotebookApp.notebook_dir=/notebooks
 
+  homeassistant:
+      image: homeassistant/home-assistant
+      volumes:
+        - homeassistant-config:/config
+      ports:
+        - "18123:8123"
+
   openhab:
     image: "openhab/openhab:3.0.0"
     volumes:
@@ -138,6 +145,13 @@ volumes:
       o:         bind
 
   openhab_userdata:
+    driver:      local
+    driver_opts:
+      type:      none
+      device:    /volume2/homecloud/openhab/userdata
+      o:         bind
+
+  homeassistant-config:
     driver:      local
     driver_opts:
       type:      none
