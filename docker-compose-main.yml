@@ -35,8 +35,8 @@ services:
       OPENHAB_HTTPS_PORT: "8443"
       EXTRA_JAVA_OPTS: "-Duser.timezone=Europe/Berlin"
     ports:
-      - "98080:8080"
-      - "98443:8443"
+      - "28080:8080"
+      - "28443:8443"
 
   grocy-nginx:
     image: "grocy/nginx:v3.0.0-1"
