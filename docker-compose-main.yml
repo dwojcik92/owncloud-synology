@@ -26,7 +26,6 @@ services:
     image: "openhab/openhab:3.0.0"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/etc/timezone:/etc/timezone:ro"
       - "openhab_addons:/openhab/addons"
       - "openhab_conf:/openhab/conf"
       - "openhab_userdata:/openhab/userdata"
