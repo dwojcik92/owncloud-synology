@@ -61,7 +61,9 @@ services:
       - SPARK_RPC_ENCRYPTION_ENABLED=no
       - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
       - SPARK_SSL_ENABLED=no
-
+    ports:
+      - '18080:8080'
+      - '17077:7077'
   minio:
     image: minio/minio:latest
     environment:
