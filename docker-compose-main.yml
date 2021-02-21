@@ -110,5 +110,5 @@ volumes:
     driver:      local
     driver_opts:
       type:      none
-      device:    /volume2/homecloud/Minio
+      device:    /volume2/homecloud/MinIO
       o:         bind
