@@ -12,63 +12,12 @@ services:
       - "syncthing-config:/var/syncthing/.config/syncthing"
       - "syncthing-data:/var/syncthing"
 
-  jupyterlab-tensorflow:
-    image: jupyter/tensorflow-notebook
-    volumes:
-     - "homecloud-jupyter:/notebooks"
-    ports:
-      - "18888:8888"
-    environment:
-      - JUPYTER_ENABLE_LAB=1
-    command: start-notebook.sh --NotebookApp.notebook_dir=/notebooks
-
   homeassistant:
       image: homeassistant/home-assistant
       volumes:
         - homeassistant-config:/config
       ports:
         - "18123:8123"
-
-  openhab:
-    image: "openhab/openhab:3.0.0"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "openhab_addons:/openhab/addons"
-      - "openhab_conf:/openhab/conf"
-      - "openhab_userdata:/openhab/userdata"
-    environment:
-      OPENHAB_HTTP_PORT: "8080"
-      OPENHAB_HTTPS_PORT: "8443"
-      EXTRA_JAVA_OPTS: "-Duser.timezone=Europe/Berlin"
-    ports:
-      - "28080:8080"
-      - "28443:8443"
-
-  grocy-nginx:
-    image: "grocy/nginx:v3.0.0-1"
-    depends_on:
-      - grocy
-    ports:
-      - '22080:8080'
-      - '22443:8443'
-    read_only: true
-    tmpfs:
-      - /tmp
-    volumes:
-      - /var/log/nginx
-
-  grocy:
-    image: "grocy/grocy:v3.0.0-1"
-    expose:
-      - '9000'
-    read_only: true
-    tmpfs:
-      - /tmp
-    volumes:
-      - /var/log/php7
-      - grocy-db:/var/www/data
-    env_file:
-      - grocy.env
 
   grafana:
     image: grafana/grafana
@@ -88,6 +37,29 @@ services:
       - INFLUXDB_ADMIN_USER=synology
       - INFLUXDB_ADMIN_PASSWORD=synology
 
+  spark:
+    image: docker.io/bitnami/spark:3-debian-10
+    environment:
+      - SPARK_MODE=master
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+    ports:
+      - '8080:8080'
+  spark-worker-1:
+    image: docker.io/bitnami/spark:3-debian-10
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark:7077
+      - SPARK_WORKER_MEMORY=1G
+      - SPARK_WORKER_CORES=1
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+
+
 volumes:
   syncthing-config:
     driver:      local
@@ -103,13 +75,6 @@ volumes:
       device:    /volume2/homecloud/syncthing/data
       o:         bind
 
-  grocy-db:
-    driver:      local
-    driver_opts:
-      type:      none
-      device:    /volume2/homecloud/grocy
-      o:         bind
-
   homecloud-grafana:
     driver:      local
     driver_opts:
@@ -121,34 +86,6 @@ volumes:
     driver_opts:
       type:      none
       device:    /volume2/homecloud/influxdb
-      o:         bind
-
-  homecloud-jupyter:
-    driver:      local
-    driver_opts:
-      type:      none
-      device:    /volume2/homecloud/jupyter-notebooks
-      o:         bind
-
-  openhab_addons:
-    driver:      local
-    driver_opts:
-      type:      none
-      device:    /volume2/homecloud/openhab/addons
-      o:         bind
-
-  openhab_conf:
-    driver:      local
-    driver_opts:
-      type:      none
-      device:    /volume2/homecloud/openhab/conf
-      o:         bind
-
-  openhab_userdata:
-    driver:      local
-    driver_opts:
-      type:      none
-      device:    /volume2/homecloud/openhab/userdata
       o:         bind
 
   homeassistant-config:
